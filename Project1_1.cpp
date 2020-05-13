@@ -8,7 +8,7 @@ bool check = false;
 void IR(string str, string func7, string func3, string opcode) {
 	string rs[3];
 	int p = 0;
-	for (int i = 0;i < str.size();i++) {
+	for (int i = 0; i < str.size(); i++) {
 		if (str[i] == ',') {
 			p++;
 			continue;
@@ -31,6 +31,24 @@ void IR(string str, string func7, string func3, string opcode) {
 			cout << bitset<12>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0010011" << endl;
 	}
 }
+void load(string str, string func3) {
+	string rs[3];
+	int p = 0;
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == ',' || str[i] == '(') {
+			p++;
+			continue;
+		}
+
+		if (str[i] > 47 && str[i] < 58)
+			rs[p] += str[i];
+	}
+	int rd = stoi(rs[0]);
+	int offet = stoi(rs[1]);
+	int rs1 = stoi(rs[2]);
+	cout << bitset<12>(offet) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0000011" << endl;
+}
+
 
 int main() {
 	string buffer;
@@ -41,7 +59,7 @@ int main() {
 		if (buffer == "-1")
 			break;
 		inst[n] = buffer;
-		for (int k = 0;k < buffer.size();k++) {
+		for (int k = 0; k < buffer.size(); k++) {
 			if (buffer[k] == ':') {
 				int m = buffer[k - 1] - '0';
 				label[m] = n;
@@ -50,7 +68,7 @@ int main() {
 		n++;
 	}
 	int pos;
-	for (int j = 0;j < n;j++) {
+	for (int j = 0; j < n; j++) {
 		if (inst[j][0] == 'L') {
 			pos = inst[j].find(" ");
 			inst[j].erase(0, pos + 1);
@@ -60,5 +78,76 @@ int main() {
 		if (x == "add") {
 			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "000", "0110011");
 		}
-		
+		else if (x == "sub") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0100000", "000", "0110011");
+		}
+		else if (x == "sll") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "001", "0110011");
+		}
+		else if (x == "slt") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "010", "0110011");
+		}
+		else if (x == "sltu") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "011", "0110011");
+		}
+		else if (x == "xor") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "100", "0110011");
+		}
+		else if (x == "srl") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "101", "0110011");
+		}
+		else if (x == "sra") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0100000", "101", "0110011");
+		}
+		else if (x == "or") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "110", "0110011");
+		}
+		else if (x == "and") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "111", "0110011");
+		}
+		else if (x == "slli") {
+			check = true;
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "001", "0010011");
+		}
+		else if (x == "srli") {
+			check = true;
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "101", "0010011");
+		}
+		else if (x == "srai") {
+			check = true;
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0100000", "101", "0010011");
+		}
+		else if (x == "addi") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "000", "0010011");
+		}
+		else if (x == "slti") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "010", "0010011");
+		}
+		else if (x == "sltiu") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "011", "0010011");
+		}
+		else if (x == "xori") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "100", "0010011");
+		}
+		else if (x == "ori") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "110", "0010011");
+		}
+		else if (x == "andi") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "111", "0010011");
+		}
+		else if (x == "lb") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "000");
+		}
+		else if (x == "lh") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "001");
+		}
+		else if (x == "lw") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "010");
+		}
+		else if (x == "lbu") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "100");
+		}
+		else if (x == "lhu") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "101");
+		}
 	}
