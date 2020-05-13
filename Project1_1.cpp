@@ -48,7 +48,54 @@ void load(string str, string func3) {
 	int rs1 = stoi(rs[2]);
 	cout << bitset<12>(offet) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0000011" << endl;
 }
+void S(string str, string func3) {
+	string rs[3];
+	int p = 0;
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == ',' || str[i] == '(') {
+			p++;
+			continue;
+		}
 
+		if (str[i] > 47 && str[i] < 58)
+			rs[p] += str[i];
+	}
+	int rs2 = stoi(rs[0]);
+	int offset = stoi(rs[1]);
+	int rs1 = stoi(rs[2]);
+	bitset<12> b0(offset);
+	string s, s1, s2;
+	s = b0.to_string();
+	s1 = s.substr(0, 7);
+	s2 = s.substr(7, 5);
+	cout << s1 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << s2 << " " << "0100011" << endl;
+}
+
+void SB(string str, string func3) {
+	string rs[3];
+	int p = 0;
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == ',') {
+			p++;
+			continue;
+		}
+
+		if (str[i] > 47 && str[i] < 58)
+			rs[p] += str[i];
+	}
+	int rs1 = stoi(rs[0]);
+	int rs2 = stoi(rs[1]);
+	int buf = stoi(rs[2]);
+	int offset = label[buf];
+	bitset<13> b0(offset);
+	string s, s1, s2, s3, s4;
+	s = b0.to_string();
+	s1 = s.substr(0, 1);
+	s2 = s.substr(1, 1);
+	s3 = s.substr(2, 6);
+	s4 = s.substr(8, 4);
+	cout << s1 << s3 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << s4 << s2 << " " << "1100011" << endl;
+}
 
 int main() {
 	string buffer;
@@ -149,5 +196,32 @@ int main() {
 		}
 		else if (x == "lhu") {
 			load(inst[j].substr(pos, inst[j].size() - 1), "101");
+		}
+		else if (x == "sb" || x == "sd") {
+			S(inst[j].substr(pos, inst[j].size() - 1), "000");
+		}
+		else if (x == "sh") {
+			S(inst[j].substr(pos, inst[j].size() - 1), "001");
+		}
+		else if (x == "sw") {
+			S(inst[j].substr(pos, inst[j].size() - 1), "010");
+		}
+		else if (x == "beq") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "000");
+		}
+		else if (x == "bne") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "001");
+		}
+		else if (x == "blt") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "100");
+		}
+		else if (x == "bge") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "101");
+		}
+		else if (x == "bltu") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "110");
+		}
+		else if (x == "bgeu") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "111");
 		}
 	}
