@@ -26,15 +26,15 @@
 
 其格式為 `Imm[12|10:5](7 bit) rs2(5 bit) rs1(5 bit) func3(3 bit) imm[4:1|11](5 bit) opcode(7 bit)`  
 
-其中，branch taken後跳到的`L2: `的位置為5 (從上而下 從0開始算pc)
+其中，branch taken後跳到的`L2: `的位置為6 (從上而下 從1開始算pc)
 則imm為000000000101
-x24的24放到`rs1`，x23的23放到`rs2`，L2的5放到 `offset`(也就是imm)  
+x24的24放到`rs1`，x23的23放到`rs2`，L2的6放到 `offset`(也就是imm)  
 
 `func3`、`opcode`參照對照表  
 
-轉換成`machine code`為`0000000 10111 11000 001 00100 1100011`  
+轉換成`machine code`為`0000000 10111 11000 001 00110 1100011`  
 
-![image](https://github.com/fup3su6/ALCO_project1/blob/master/output.jpg)
+![image](https://github.com/fup3su6/ALCO_project1/blob/master/output2.jpg)
 
 註4: (對照表)  
 
