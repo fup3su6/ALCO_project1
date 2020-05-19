@@ -89,8 +89,244 @@ int main() {
 ```
 宣告一個`string` `buffer` 存getline的string，如果是”-1”就結束程式  
 
-宣告一個`string` `array``inst` 將每一條指令以string型態存入  
+宣告一個`string` `array` `inst` 將每一條指令以string型態存入  
 
 for迴圈跑每一行string的size，若有`:`存在代表那行有label，紀錄label，也就是Lm的位置 ex: L2的位子在instruction的第6行，則`label[2] = 6`。  
 
 方式: 先將那格char– ‘0’的ascii變成數字index再存入
+
+```c++
+int pos;
+	for (int j = 0;j < n;j++) {
+		if (inst[j][0] == 'L') {
+			pos = inst[j].find(" ");
+			inst[j].erase(0, pos + 1);
+		}
+		pos = inst[j].find(" ");
+		string x = inst[j].substr(0, pos);
+```
+宣告一個`int pos` 暫存find字元位置(本指令第一個空格)  
+
+for迴圈跑n次(n=inst數量)，如果當前inst的第一格為’L’就把它擦掉(0到pos+1)  
+
+宣告一個`string x` 存每行inst第一個空格前的字串ex:add、beg…(0到pos)
+
+```c++
+if (x == "add") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "000", "0110011");
+		}
+		else if (x == "sub") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0100000", "000", "0110011");
+		}
+		else if (x == "sll") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "001", "0110011");
+		}
+		else if (x == "slt") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "010", "0110011");
+		}
+		else if (x == "sltu") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "011", "0110011");
+		}
+		else if (x == "xor") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "100", "0110011");
+		}
+		else if (x == "srl") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "101", "0110011");
+		}
+		else if (x == "sra") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0100000", "101", "0110011");
+		}
+		else if (x == "or") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "110", "0110011");
+		}
+		else if (x == "and") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "111", "0110011");
+		}
+		else if (x == "slli") {
+			check = true;
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "001", "0010011");
+		}
+		else if (x == "srli") {
+			check = true;
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "101", "0010011");
+		}
+		else if (x == "srai") {
+			check = true;
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0100000", "101", "0010011");
+		}
+		else if (x == "addi") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "000", "0010011");
+		}
+		else if (x == "slti") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "010", "0010011");
+		}
+		else if (x == "sltiu") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "011", "0010011");
+		}
+		else if (x == "xori") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "100", "0010011");
+		}
+		else if (x == "ori") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "110", "0010011");
+		}
+		else if (x == "andi") {
+			IR(inst[j].substr(pos, inst[j].size() - 1), "0", "111", "0010011");
+		}
+```
+判斷x為哪個字串  
+
+如果是`I/R type`，呼叫`IR(string str, string func7, string func3, string opcode)`  
+
+第一個參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)  
+
+第二個為`func7`  
+
+第三個為`func3`  
+
+第四個為`opcode`
+
+```c++
+else if (x == "lb") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "000");
+		}
+		else if (x == "lh") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "001");
+		}
+		else if (x == "lw") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "010");
+		}
+		else if (x == "lbu") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "100");
+		}
+		else if (x == "lhu") {
+			load(inst[j].substr(pos, inst[j].size() - 1), "101");
+		}
+```
+如果x是`load type`，呼叫`load(string str, string func3)`  
+
+第一個參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)  
+第二個為`func3`
+
+```c++
+else if (x == "sb" || x == "sd") {
+			S(inst[j].substr(pos, inst[j].size() - 1), "000");
+		}
+		else if (x == "sh") {
+			S(inst[j].substr(pos, inst[j].size() - 1), "001");
+		}
+		else if (x == "sw") {
+			S(inst[j].substr(pos, inst[j].size() - 1), "010");
+		}
+```
+如果x是`store type`，呼叫`S(string str, string func3)`  
+
+第一個參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)  
+
+第二個為`func3`
+
+```c++
+else if (x == "beq") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "000");
+		}
+		else if (x == "bne") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "001");
+		}
+		else if (x == "blt") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "100");
+		}
+		else if (x == "bge") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "101");
+		}
+		else if (x == "bltu") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "110");
+		}
+		else if (x == "bgeu") {
+			SB(inst[j].substr(pos, inst[j].size() - 1), "111");
+		}
+```
+
+如果x是`SB type`，呼叫`SB(string str, string func3)`  
+
+第一個參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)  
+
+第二個為`func3`
+
+```c++
+else if (x == "jalr") {
+		jr(inst[j].substr(pos, inst[j].size() - 1), "000");
+		}
+```
+如果x是`jalr`，呼叫`jr(string str, string func3)`  
+
+第一個參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)  
+
+第二個為`func3`
+
+```c++
+else if (x == "jal") {
+		jj(inst[j].substr(pos, inst[j].size() - 1));
+		}
+```
+
+如果x是`jalr`，呼叫`jj(string str)`  
+
+參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)
+
+```c++
+else if (x == "lui") {
+		remain(inst[j].substr(pos, inst[j].size() - 1), "0110111");
+		}
+		else if (x == "auipc") {
+		remain(inst[j].substr(pos, inst[j].size() - 1), "0010111");
+		}
+	}//end for
+}//end main
+```
+如果x是`lui/auipc`，呼叫`remain(string str, string opcode)`  
+
+第一個參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)  
+
+第二個放`opcode`
+
+```c++
+void IR(string str, string func7, string func3, string opcode) {
+ string rs[3];
+ int p = 0;
+ for (int i = 0;i < str.size();i++) {
+  if (str[i] == ',') {
+   p++;
+   continue;
+  }
+
+  if (str[i] == 45 || (str[i] > 47 && str[i] < 58))
+   rs[p] += str[i];
+ }
+ int rd = stoi(rs[0]);
+ int rs1 = stoi(rs[1]);
+ int rs2 = stoi(rs[2]);
+ if (check == true) {
+  cout << func7 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0010011" << endl;
+  check = false;
+ }
+ else {
+  if (opcode == "0110011")
+   cout << func7 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0110011" << endl;
+  else
+   cout << bitset<12>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0010011" << endl;
+ }
+}
+```
+`void IR(string ,string ,string ,string)`  
+用來實作`R Type`與`I Type` instructions，傳入四個值分別為 `處理過後的字串`(詳情請看main function) `func7` `func3` `opcode` ，方便底下實作判斷   
+宣告`string rs[3]` 用來存`rs1` `rs2` `rd` 分別的string  
+宣告`int p` 存`rs[]`的位子，p = 0代表`rd`，p = 1代表`rs1`，p = 2代表`rs2`  
+for迴圈從字串的第一個位子開始到最後  
+如果遇到`,`就代表進入下一個位子p++，如果是數字就加入字串內  
+宣告 `int rd` `int rs1` `int rs2` 並將剛剛存好的`string`利用`stoi`轉換為`int`  
+如果`check`為`true`為`slli` `srli` `srai` `Type`，按照對照表的格式印出，else為其他的`IR Type`  
+IR Type再判斷opcode，如果`opcode`為`"0110011"`代表`R Type`，其他 `opcode`為 `"0010011"`代表 `I Type`，再依照格式利用bitset調整bit印出
+
+
+
+
+
