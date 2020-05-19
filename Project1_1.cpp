@@ -295,3 +295,4 @@ int main() {
 		remain(inst[j].substr(pos, inst[j].size() - 1), "0010111");
 		}
 	}
+}

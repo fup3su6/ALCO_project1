@@ -43,10 +43,10 @@ x24的24放到`rs1`，x23的23放到`rs2`，L2的5放到 `offset`(也就是imm)
 
 
 # 3.Basic method
-* 1.利用while(getline){ }將每一行instrucion讀入存起來  
-* 2.先判斷有沒有label  
-* 3.用逗號切割字串得到數字的值  
-* 4.把register跟immediate值存起來
+* 利用while(getline){ }將每一行instrucion讀入存起來  
+* 先判斷有沒有label  
+* 用逗號切割字串得到數字的值  
+* 把register跟immediate值存起來
 
 # 4.Code analysis
 ```c++
