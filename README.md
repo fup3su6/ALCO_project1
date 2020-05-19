@@ -12,27 +12,27 @@
 # 2.Output description
 按照RV32I Base Integer Instruction Set對照表(註4)的格式，將對應的type或inst的machine code印出，如上面input會有以下結果。  
 
-以add x2,x2,x23為例  
+以`add x2,x2,x23`為例  
 
-其格式為 func7(7 bit) rs2(5 bit) rs1(5 bit) func3(3 bit) rd(5 bit) opcode(7 bit)  
+其格式為 `func7(7 bit) rs2(5 bit) rs1(5 bit) func3(3 bit) rd(5 bit) opcode(7 bit)`  
 
-後面x2的2放到rs1，x23的23放到rs2，前面x2的2放到rd
-func7、func3、opcode參照對照表  
+後面x2的2放到`rs1`，x23的23放到`rs2`，前面x2的2放到`rd`  
 
-轉換成machine code為
-0000000 10111 00010 000 00010 0110011
+`func7`、`func3`、`opcode`參照對照表  
 
-再以bne x24,x23,L2為例  
+轉換成`machine code`為`0000000 10111 00010 000 00010 0110011`
 
-其格式為 Imm[12|10:5](7 bit) rs2(5 bit) rs1(5 bit) func3(3 bit) imm[4:1|11](5 bit) opcode(7 bit)  
+再以`bne x24,x23,L2`為例  
 
-其中，branch taken後跳到的L2: 的位置為5 (從上而下 從0開始算pc)
+其格式為 `Imm[12|10:5](7 bit) rs2(5 bit) rs1(5 bit) func3(3 bit) imm[4:1|11](5 bit) opcode(7 bit)`  
+
+其中，branch taken後跳到的`L2: `的位置為5 (從上而下 從0開始算pc)
 則imm為000000000101
-x24的24放到rs1，x23的23放到rs2，L2的5放到 offset(也就是imm)
-func3、opcode參照對照表  
+x24的24放到`rs1`，x23的23放到`rs2`，L2的5放到 `offset`(也就是imm)  
 
-轉換成machine code 為
-0000000 10111 11000 001 00100 1100011  
+`func3`、`opcode`參照對照表  
+
+轉換成`machine code`為`0000000 10111 11000 001 00100 1100011`  
 
 ![image](https://github.com/fup3su6/ALCO_project1/blob/master/output.jpg)
 
