@@ -179,11 +179,7 @@ if (x == "add") {
 
 第一個參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)  
 
-第二個為`func7`  
-
-第三個為`func3`  
-
-第四個為`opcode`
+第二個為`func7`  第三個為`func3`  第四個為`opcode`
 
 ```c++
 else if (x == "lb") {
@@ -205,6 +201,7 @@ else if (x == "lb") {
 如果x是`load type`，呼叫`load(string str, string func3)`  
 
 第一個參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)  
+
 第二個為`func3`
 
 ```c++
@@ -317,14 +314,255 @@ void IR(string str, string func7, string func3, string opcode) {
 }
 ```
 `void IR(string ,string ,string ,string)`  
+  
 用來實作`R Type`與`I Type` instructions，傳入四個值分別為 `處理過後的字串`(詳情請看main function) `func7` `func3` `opcode` ，方便底下實作判斷   
+
 宣告`string rs[3]` 用來存`rs1` `rs2` `rd` 分別的string  
+
 宣告`int p` 存`rs[]`的位子，p = 0代表`rd`，p = 1代表`rs1`，p = 2代表`rs2`  
+
 for迴圈從字串的第一個位子開始到最後  
+
 如果遇到`,`就代表進入下一個位子p++，如果是數字就加入字串內  
+
 宣告 `int rd` `int rs1` `int rs2` 並將剛剛存好的`string`利用`stoi`轉換為`int`  
+
 如果`check`為`true`為`slli` `srli` `srai` `Type`，按照對照表的格式印出，else為其他的`IR Type`  
+
 IR Type再判斷opcode，如果`opcode`為`"0110011"`代表`R Type`，其他 `opcode`為 `"0010011"`代表 `I Type`，再依照格式利用bitset調整bit印出
+
+```c++
+void load(string str, string func3) {
+	string rs[3];
+	int p = 0;
+	for (int i = 0;i < str.size();i++) {
+		if (str[i] == ',' || str[i] == '(') {
+			p++;
+			continue;
+		}
+
+		if (str[i] > 47 && str[i] < 58)
+			rs[p] += str[i];
+	}
+	int rd = stoi(rs[0]);
+	int offet = stoi(rs[1]);
+	int rs1 = stoi(rs[2]);
+	cout << bitset<12>(offet) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0000011" << endl;
+}
+```
+`void load(string str, string func3)`  
+ 
+用來實作`load Type` instructions，傳入2個值分別為 `處理過後的字串`(詳情請看main function) `func3`，方便底下實作判斷    
+ 
+宣告`string rs[3]` 用來存`rd` `offset` `rs1` 分別的string    
+
+宣告`int p` 存`rs[]`的位子，p = 0代表`rd`，p = 1代表`offet`，p = 2代表`rs1`    
+
+for迴圈從字串的第一個位子開始到最後    
+
+如果遇到`,`或`(`就代表進入下一個位子p++，如果是數字就加入字串內    
+
+宣告 `int rd` `int offset` `int rs1` 並將剛剛存好的`string`利用`stoi`轉換為`int`    
+
+再依照格式利用bitset調整bit印出
+
+```c++
+void S(string str, string func3) {
+	string rs[3];
+	int p = 0;
+	for (int i = 0;i < str.size();i++) {
+		if (str[i] == ',' || str[i] == '(') {
+			p++;
+			continue;
+		}
+
+		if (str[i] > 47 && str[i] < 58)
+			rs[p] += str[i];
+	}
+	int rs2 = stoi(rs[0]);
+	int offset = stoi(rs[1]);
+	int rs1 = stoi(rs[2]);
+	bitset<12> b0(offset);
+	string s, s1, s2;
+	s = b0.to_string();
+	s1 = s.substr(0, 7);
+	s2 = s.substr(7, 5);
+	cout << s1 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << s2 << " " << "0100011" << endl;
+}
+```
+`void S(string str, string func3)`  
+
+用來實作 `store Type` instructions，傳入2個值分別為 `處理過後的字串`(詳情請看main function) `func3`，方便底下實作判斷     
+
+宣告`string rs[3]` 用來存`rs2` `offset` `rs1` 分別的string    
+
+宣告`int p` 存`rs[]`的位子，p = 0代表`rs2`，p = 1代表`offet`，p = 2代表`rs1`    
+
+for迴圈從字串的第一個位子開始到最後    
+
+如果遇到`,`或`(`就代表進入下一個位子p++，如果是數字就加入字串內    
+
+宣告 `int rs2` `int offset` `int rs1` 並將剛剛存好的`string`利用`stoi`轉換為`int`    
+
+又因為`store type`的`offset`要依他的表格分段切割再重新排列，先將`offset`轉成`12bit`的bitset `b0`，將b0轉成string後用`substr`分割，再依照格式利用bitset調整bit印出
+
+```c++
+void SB(string str, string func3) {
+	string rs[3];
+	int p = 0;
+	for (int i = 0;i < str.size();i++) {
+		if (str[i] == ',') {
+			p++;
+			continue;
+		}
+
+		if (str[i] > 47 && str[i] < 58)
+			rs[p] += str[i];
+	}
+	int rs1 = stoi(rs[0]);
+	int rs2 = stoi(rs[1]);
+	int buf = stoi(rs[2]);
+	int offset = label[buf];
+	bitset<13> b0(offset);
+	string s, s1, s2, s3, s4;
+	s = b0.to_string();
+	s1 = s.substr(0, 1);
+	s2 = s.substr(1, 1);
+	s3 = s.substr(2, 6);
+	s4 = s.substr(8, 4);
+	cout << s1 << s3 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << s4 << s2 << " " << "1100011" << endl;
+}
+```
+`void SB(string str, string func3)`  
+
+用來實作 `SB Type` instructions，傳入2個值分別為 `處理過後的字串`(詳情請看main function) `func3`，方便底下實作判斷   
+  
+宣告`string rs[3]` 用來存`rs1` `rs2` `buf` 分別的string  
+  
+宣告`int p` 存`rs[]`的位子，p = 0代表`rs1`，p = 1代表`rs2`，p = 2代表`buf`    
+
+for迴圈從字串的第一個位子開始到最後    
+
+如果遇到`,`就代表進入下一個位子p++，如果是數字就加入字串內    
+
+宣告 `int rs1` `int rs2` `int buf`並將剛剛存好的`string`利用`stoi`轉換為`int`  
+ 
+宣告 `int offset`存label為buf的位置  
+ 
+又因為`SB type`的`offset`要依他的表格分段切割再重新排列，先將`offset`轉成`13bit`的bitset `b0`，將b0轉成string後用`substr`分割，再依照格式利用bitset調整bit印出  
+
+```c++
+void jj(string str) {
+	string rs[2];
+	int p = 0;
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == ',') {
+			p++;
+			continue;
+		}
+
+		if (str[i] > 47 && str[i] < 58)
+			rs[p] += str[i];
+	}
+	int rd = stoi(rs[0]);
+	int buf = stoi(rs[1]);
+	int offset = label[buf];
+	bitset<21> b0(offset);
+	string s, s1, s2, s3, s4;
+	s = b0.to_string();
+	s1 = s.substr(0, 1);
+	s2 = s.substr(1, 8);
+	s3 = s.substr(9, 1);
+	s4 = s.substr(10, 10);
+	cout << s1 << " " << s4 << " " << s3 << " " << s2 << " " << bitset<5>(rd) << " " << "1101111" << endl;
+}
+```
+`void jj(string str)`  
+
+用來實作 `jal` instructions，傳入值為 `處理過後的字串`(詳情請看main function) 方便底下實作判斷  
+   
+宣告`string rs[2]` 用來存`rd` `buf` 分別的string  
+  
+宣告`int p` 存`rs[]`的位子，p = 0代表`rd`， p = 1代表`buf`  
+  
+for迴圈從字串的第一個位子開始到最後    
+
+如果遇到`,`就代表進入下一個位子p++，如果是數字就加入字串內   
+ 
+宣告 `int rd` `int buf`並將剛剛存好的`string`利用`stoi`轉換為`int`  
+ 
+宣告 `int offset`存標籤為buf的位置  
+ 
+又因為`jal`的`offset`要依他的表格分段切割再重新排列，先將`offset`轉成`21bit`的bitset `b0`，將b0轉成string後用`substr`分割，再依照格式利用bitset調整bit印出  
+
+```c++
+void jr(string str, string func3) {
+	string rs[3];
+	int p = 0;
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == ',') {
+			p++;
+			continue;
+		}
+
+		if (str[i] > 47 && str[i] < 58)
+			rs[p] += str[i];
+	}
+	int rd = stoi(rs[0]);
+	int rs1 = stoi(rs[1]);
+	int offet = stoi(rs[2]);
+	cout << bitset<12>(offet) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "1100111" << endl;
+}
+```
+`void jr(string str, string func3)`  
+
+用來實作 `jalr` instructions，傳入值為 `處理過後的字串`(詳情請看main function) `func3`，方便底下實作判斷   
+  
+宣告`string rs[3]` 用來存`rd` `rs1` `offet` 分別的string  
+  
+宣告`int p` 存`rs[]`的位子，p = 0代表`rd`， p = 1代表`rs1`，p = 2代表`offet`  
+  
+for迴圈從字串的第一個位子開始到最後    
+
+如果遇到`,`就代表進入下一個位子p++，如果是數字就加入字串內    
+
+宣告 `int rd` `int buf` `int offet`並將剛剛存好的`string`利用`stoi`轉換為`int`，再依照格式利用bitset調整bit印出  
+
+```c++
+void remain(string str, string opcode) {
+	string rs[2];
+	int p = 0;
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == ',') {
+			p++;
+			continue;
+		}
+
+		if (str[i] > 47 && str[i] < 58)
+			rs[p] += str[i];
+	}
+	int rd = stoi(rs[0]);
+	int offset = stoi(rs[1]);
+	bitset<20> b0(offset);
+	cout << b0 << " " << bitset<5>(rd) << " " << opcode << endl;
+}
+```
+`void remain(string str, string opcode)`  
+
+用來實作 `lui/auipc` instructions，傳入值為 `處理過後的字串`(詳情請看main function) `opcode`，方便底下實作判斷    
+ 
+宣告`string rs[2]` 用來存`rd` `offset` 分別的string  
+  
+宣告`int p` 存`rs[]`的位子，p = 0代表`rd`， p = 1代表`offset`  
+ 
+for迴圈從字串的第一個位子開始到最後    
+
+如果遇到`,`就代表進入下一個位子p++，如果是數字就加入字串內    
+
+宣告 `int rd` `int offset`並將剛剛存好的`string`利用`stoi`轉換為`int`，再依照格式利用bitset調整bit印出
+
+
+
 
 
 
