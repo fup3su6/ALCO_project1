@@ -54,9 +54,18 @@ x24的24放到`rs1`，x23的23放到`rs2`，L2的6放到 `offset`(也就是imm)
 #include<bitset>
 #include<string>
 using namespace std;
+int label[1000];
+bool check = false;
 ```
+使用`cin/cout`，`include<iostream>`  
 
+會使用到2進位數字，`include<bitset>`來將10進位轉換成2進位  
 
+使用string取instruction，`include<string>`  
+
+宣告一個`global` `int array``label` 寫入label位置  
+
+宣告一個`global` `bool` `check` 判斷type，true為slli、srli、srai type，false為其他IR type
 
 ```c++
 
@@ -78,3 +87,10 @@ int main() {
 		n++;
 	}
 ```
+宣告一個`string` `buffer` 存getline的string，如果是”-1”就結束程式  
+
+宣告一個`string` `array``inst` 將每一條指令以string型態存入  
+
+for迴圈跑每一行string的size，若有`:`存在代表那行有label，紀錄label，也就是Lm的位置 ex: L2的位子在instruction的第6行，則`label[2] = 6`。  
+
+方式: 先將那格char– ‘0’的ascii變成數字index再存入
