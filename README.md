@@ -1,4 +1,6 @@
-# 1.Input description
+# README
+
+## 1.Input description
 輸入n個instruction，以-1當作結束  
 
 註: 每一個instruction前面不能有空格，輸入範例如下  
@@ -9,7 +11,7 @@
 
 ![image](https://github.com/fup3su6/ALCO_project1/blob/master/input.jpg)
  
-# 2.Output description
+## 2.Output description
 按照RV32I Base Integer Instruction Set對照表(註4)的格式，將對應的type或inst的machine code印出，如上面input會有以下結果。  
 
 以`add x2,x2,x23`為例  
@@ -42,13 +44,13 @@ x24的24放到`rs1`，x23的23放到`rs2`，L2的6放到 `offset`(也就是imm)
 
 
 
-# 3.Basic method
+## 3.Basic method
 * 利用while(getline){ }將每一行instrucion讀入存起來  
 * 先判斷有沒有label  
 * 用逗號切割字串得到數字的值  
 * 把register跟immediate值存起來
 
-# 4.Code analysis
+## 4.Code analysis
 ```c++
 #include<iostream>
 #include<bitset>
@@ -265,7 +267,7 @@ else if (x == "jal") {
 		}
 ```
 
-如果x是`jalr`，呼叫`jj(string str)`  
+如果x是`jal`，呼叫`jj(string str)`  
 
 參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)
 
