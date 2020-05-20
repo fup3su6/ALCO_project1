@@ -1,14 +1,14 @@
 # README
 ## 1.Topic
-將輸入的instruction轉成machine code
+將輸入的instruction轉成machine code :pushpin:
 ## 2.Input description
 輸入n個instruction，以-1當作結束  
 
-註: 每一個instruction前面不能有空格，輸入範例如下  
+:warning: 每一個instruction前面不能有空格，輸入範例如下  
 
-註2: 若此instruction前面需要label的話，輸入格式需為”L”+”數字”(此數字是阿拉伯數字不是中文數字)+”:”+” ”(空格)+”instruction”  
+:warning:  若此instruction前面需要label的話，輸入格式需為”L”+”數字”(此數字是阿拉伯數字不是中文數字)+”:”+” ”(空格)+”instruction”  
 
-註3: 每個instruction要換行。  
+:warning: 每個instruction要換行。  
 
 ![image](https://github.com/fup3su6/ALCO_project1/blob/master/input.jpg)
  
@@ -39,11 +39,9 @@ x24的24放到`rs1`，x23的23放到`rs2`，L2的6放到 `offset`(也就是imm)
 
 ![image](https://github.com/fup3su6/ALCO_project1/blob/master/output2.jpg)
 
-註4: (對照表)  
+:paperclip: (對照表)  
 
 ![image](https://github.com/fup3su6/ALCO_project1/blob/master/RISC-V.jpg)
-
-
 
 ## 4.Basic method
 * 利用while(getline){ }將每一行instrucion讀入存起來  
