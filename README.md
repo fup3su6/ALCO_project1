@@ -313,7 +313,7 @@ void IR(string str, string func7, string func3, string opcode) {
  }
 }
 ```
-`void IR(string ,string ,string ,string)`  
+`void IR(string str ,string func7,string func3,string opcode)`  
   
 用來實作`R Type`與`I Type` instructions，傳入四個值分別為 `處理過後的字串`(詳情請看main function) `func7` `func3` `opcode` ，方便底下實作判斷   
 
