@@ -63,7 +63,7 @@ bool check = false;
 
 使用string取instruction，`include<string>`  
 
-宣告一個`global` `int array``label` 寫入label位置  
+宣告一個`global` `int array` `label` 寫入label位置  
 
 宣告一個`global` `bool` `check` 判斷type，true為slli、srli、srai type，false為其他IR type
 
