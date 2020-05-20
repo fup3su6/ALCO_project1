@@ -111,7 +111,7 @@ int pos;
 
 for迴圈跑n次(n=inst數量)，如果當前inst的第一格為’L’就把它擦掉(0到pos+1)  
 
-宣告一個`string x` 存每行inst第一個空格前的字串ex:add、beg…(0到pos)
+宣告一個`string x` 存每行inst第一個空格前的字串ex:add、beq…(0到pos)
 
 ```c++
 if (x == "add") {
