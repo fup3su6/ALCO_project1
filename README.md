@@ -97,7 +97,7 @@ for迴圈跑每一行string的size，若有`:`存在代表那行有label，紀�
 方式: 先將那格char– ‘0’的ascii變成數字index再存入
 
 ```c++
-int pos;
+	int pos;
 	for (int j = 0;j < n;j++) {
 		if (inst[j][0] == 'L') {
 			pos = inst[j].find(" ");
@@ -113,7 +113,7 @@ for迴圈跑n次(n=inst數量)，如果當前inst的第一格為’L’就把它
 宣告一個`string x` 存每行inst第一個空格前的字串ex:add、beq…(0到pos)
 
 ```c++
-if (x == "add") {
+		if (x == "add") {
 			IR(inst[j].substr(pos, inst[j].size() - 1), "0000000", "000", "0110011");
 		}
 		else if (x == "sub") {
@@ -183,7 +183,7 @@ if (x == "add") {
 第二個為`func7`  第三個為`func3`  第四個為`opcode`
 
 ```c++
-else if (x == "lb") {
+		else if (x == "lb") {
 			load(inst[j].substr(pos, inst[j].size() - 1), "000");
 		}
 		else if (x == "lh") {
@@ -206,7 +206,7 @@ else if (x == "lb") {
 第二個為`func3`
 
 ```c++
-else if (x == "sb" || x == "sd") {
+		else if (x == "sb" || x == "sd") {
 			S(inst[j].substr(pos, inst[j].size() - 1), "000");
 		}
 		else if (x == "sh") {
@@ -223,7 +223,7 @@ else if (x == "sb" || x == "sd") {
 第二個為`func3`
 
 ```c++
-else if (x == "beq") {
+		else if (x == "beq") {
 			SB(inst[j].substr(pos, inst[j].size() - 1), "000");
 		}
 		else if (x == "bne") {
@@ -250,7 +250,7 @@ else if (x == "beq") {
 第二個為`func3`
 
 ```c++
-else if (x == "jalr") {
+		else if (x == "jalr") {
 		jr(inst[j].substr(pos, inst[j].size() - 1), "000");
 		}
 ```
@@ -261,7 +261,7 @@ else if (x == "jalr") {
 第二個為`func3`
 
 ```c++
-else if (x == "jal") {
+		else if (x == "jal") {
 		jj(inst[j].substr(pos, inst[j].size() - 1));
 		}
 ```
@@ -271,7 +271,7 @@ else if (x == "jal") {
 參數為去掉add/beq/…(指令中第一個字串)instruction的`substr`(從pos到instruction最後一位)
 
 ```c++
-else if (x == "lui") {
+		else if (x == "lui") {
 		remain(inst[j].substr(pos, inst[j].size() - 1), "0110111");
 		}
 		else if (x == "auipc") {
@@ -288,30 +288,29 @@ else if (x == "lui") {
 
 ```c++
 void IR(string str, string func7, string func3, string opcode) {
- string rs[3];
- int p = 0;
- for (int i = 0;i < str.size();i++) {
-  if (str[i] == ',') {
-   p++;
-   continue;
-  }
-
-  if (str[i] == 45 || (str[i] > 47 && str[i] < 58))
-   rs[p] += str[i];
- }
- int rd = stoi(rs[0]);
- int rs1 = stoi(rs[1]);
- int rs2 = stoi(rs[2]);
- if (check == true) {
-  cout << func7 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0010011" << endl;
-  check = false;
- }
- else {
-  if (opcode == "0110011")
-   cout << func7 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0110011" << endl;
-  else
-   cout << bitset<12>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0010011" << endl;
- }
+	string rs[3];
+	int p = 0;
+	for (int i = 0;i < str.size();i++) {
+ 		if (str[i] == ',') {
+  			p++;
+   			continue;
+ 		}
+ 		if (str[i] == 45 || (str[i] > 47 && str[i] < 58))
+			rs[p] += str[i];
+	}
+	int rd = stoi(rs[0]);
+	int rs1 = stoi(rs[1]);
+	int rs2 = stoi(rs[2]);
+	if (check == true) {
+		cout << func7 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0010011" << endl;
+		check = false;
+ 	}
+	else {
+		if (opcode == "0110011")
+			cout << func7 << " " << bitset<5>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0110011" << endl;
+		else
+   			cout << bitset<12>(rs2) << " " << bitset<5>(rs1) << " " << func3 << " " << bitset<5>(rd) << " " << "0010011" << endl;
+ 	}
 }
 ```
 `void IR(string str ,string func7,string func3,string opcode)`  
