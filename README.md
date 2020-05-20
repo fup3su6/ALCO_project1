@@ -39,7 +39,7 @@ x24的24放到`rs1`，x23的23放到`rs2`，L2的6放到 `offset`(也就是imm)
 
 ![image](https://github.com/fup3su6/ALCO_project1/blob/master/output2.jpg)
 
-:paperclip: (對照表)  
+:mag: (對照表)  
 
 ![image](https://github.com/fup3su6/ALCO_project1/blob/master/RISC-V.jpg)
 
